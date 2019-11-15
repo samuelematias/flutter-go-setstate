@@ -1,44 +1,26 @@
 import 'package:flutter/material.dart';
 
-class Home extends StatefulWidget {
-  @override
-  _HomeState createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
-  List<String> _pageData;
-
-  bool get _fecthingData => _pageData == null;
-
-  @override
-  void initState() {
-    _getListData(hasData: false)
-        .then((data) => setState(() {
-              if (data.length == 0) {
-                data.add(
-                    'No data found for your account. Add something and check back.');
-              }
-              _pageData = data;
-            }))
-        .catchError((error) => setState(() {
-              _pageData = [error];
-            }));
-    super.initState();
-  }
-
+class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[900],
-      body: _fecthingData
-          ? Center(
+      body: FutureBuilder(
+        future: _getListData(),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (!snapshot.hasData) {
+            return Center(
               child: CircularProgressIndicator(),
-            )
-          : ListView.builder(
-              itemCount: _pageData.length,
-              itemBuilder: (BuildContext context, int index) =>
-                  _getListItemUi(index),
-            ),
+            );
+          }
+          List<String> listItems = snapshot.data;
+          return ListView.builder(
+            itemCount: listItems.length,
+            itemBuilder: (BuildContext context, int index) =>
+                _getListItemUi(index, listItems),
+          );
+        },
+      ),
     );
   }
 
@@ -56,7 +38,7 @@ class _HomeState extends State<Home> {
     return List<String>.generate(10, (index) => '$index title');
   }
 
-  Widget _getListItemUi(int index) {
+  Widget _getListItemUi(int index, List<String> listItems) {
     return Container(
       margin: EdgeInsets.all(5.0),
       height: 50.0,
@@ -66,7 +48,7 @@ class _HomeState extends State<Home> {
       ),
       child: Center(
         child: Text(
-          _pageData[index],
+          listItems[index],
           style: TextStyle(
             color: Colors.white,
           ),
