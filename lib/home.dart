@@ -12,9 +12,13 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
-    _getListData().then((data) => setState(() {
-          _pageData = data;
-        }));
+    _getListData(hasError: true)
+        .then((data) => setState(() {
+              _pageData = data;
+            }))
+        .catchError((error) => setState(() {
+              _pageData = [error];
+            }));
     super.initState();
   }
 
@@ -34,8 +38,12 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Future<List<String>> _getListData() async {
+  Future<List<String>> _getListData({bool hasError = false}) async {
     await Future.delayed(Duration(seconds: 2));
+    if (hasError) {
+      return Future.error(
+          'An error occurred while fetching the data. Please try agagin later.');
+    }
     return List<String>.generate(10, (index) => '$index title');
   }
 
