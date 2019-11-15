@@ -6,7 +6,9 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  List<String> _pageData = List<String>();
+  List<String> _pageData;
+
+  bool get _fecthingData => _pageData == null;
 
   @override
   void initState() {
@@ -20,15 +22,20 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[900],
-      body: ListView.builder(
-        itemCount: _pageData.length,
-        itemBuilder: (BuildContext context, int index) => _getListItemUi(index),
-      ),
+      body: _fecthingData
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : ListView.builder(
+              itemCount: _pageData.length,
+              itemBuilder: (BuildContext context, int index) =>
+                  _getListItemUi(index),
+            ),
     );
   }
 
   Future<List<String>> _getListData() async {
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(Duration(seconds: 2));
     return List<String>.generate(10, (index) => '$index title');
   }
 
