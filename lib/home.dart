@@ -19,14 +19,10 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[900],
       body: ListView.builder(
         itemCount: _pageData.length,
-        itemBuilder: (BuildContext context, int index) => Container(
-          margin: EdgeInsets.all(5.0),
-          height: 50.0,
-          color: Colors.grey[700],
-          child: Text(_pageData[index]),
-        ),
+        itemBuilder: (BuildContext context, int index) => _getListItemUi(index),
       ),
     );
   }
@@ -34,5 +30,24 @@ class _HomeState extends State<Home> {
   Future<List<String>> _getListData() async {
     await Future.delayed(Duration(seconds: 1));
     return List<String>.generate(10, (index) => '$index title');
+  }
+
+  Widget _getListItemUi(int index) {
+    return Container(
+      margin: EdgeInsets.all(5.0),
+      height: 50.0,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(5.0),
+        color: Colors.grey[600],
+      ),
+      child: Center(
+        child: Text(
+          _pageData[index],
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ),
+      ),
+    );
   }
 }
