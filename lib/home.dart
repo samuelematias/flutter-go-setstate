@@ -1,25 +1,48 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
-class Home extends StatelessWidget {
+enum HomeViewState { Busy, DataRetrieved, NoData }
+
+class Home extends StatefulWidget {
+  @override
+  _HomeState createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  final StreamController<HomeViewState> stateController =
+      StreamController<HomeViewState>();
+
+  List<String> listItems;
+
+  @override
+  void initState() {
+    _getListData();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          _getListData();
+        },
+      ),
       backgroundColor: Colors.grey[900],
-      body: FutureBuilder(
-        future: _getListData(),
+      body: StreamBuilder(
+        stream: stateController.stream,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasError) {
             return _getInformationMessage(snapshot.error);
-          } else if (!snapshot.hasData) {
+          } else if (!snapshot.hasData || snapshot.data == HomeViewState.Busy) {
             return Center(
               child: CircularProgressIndicator(),
             );
-          } else if (snapshot.data.length == 0) {
+          } else if (snapshot.data == HomeViewState.NoData) {
             return _getInformationMessage(
                 'No data found for your account. Add something and check back.');
           }
-
-          List<String> listItems = snapshot.data;
 
           return ListView.builder(
             itemCount: listItems.length,
@@ -31,18 +54,20 @@ class Home extends StatelessWidget {
     );
   }
 
-  Future<List<String>> _getListData({
+  Future _getListData({
     bool hasError = false,
     bool hasData = true,
   }) async {
+    stateController.add(HomeViewState.Busy);
     await Future.delayed(Duration(seconds: 2));
     if (hasError) {
-      return Future.error(
+      return stateController.addError(
           'An error occurred while fetching the data. Please try agagin later.');
     } else if (!hasData) {
-      return List<String>();
+      return stateController.add(HomeViewState.NoData);
     }
-    return List<String>.generate(10, (index) => '$index title');
+    listItems = List<String>.generate(10, (index) => '$index title');
+    stateController.add(HomeViewState.DataRetrieved);
   }
 
   Widget _getListItemUi(int index, List<String> listItems) {
