@@ -8,12 +8,19 @@ class Home extends StatelessWidget {
       body: FutureBuilder(
         future: _getListData(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if (!snapshot.hasData) {
+          if (snapshot.hasError) {
+            return _getInformationMessage(snapshot.error);
+          } else if (!snapshot.hasData) {
             return Center(
               child: CircularProgressIndicator(),
             );
+          } else if (snapshot.data.length == 0) {
+            return _getInformationMessage(
+                'No data found for your account. Add something and check back.');
           }
+
           List<String> listItems = snapshot.data;
+
           return ListView.builder(
             itemCount: listItems.length,
             itemBuilder: (BuildContext context, int index) =>
@@ -52,6 +59,19 @@ class Home extends StatelessWidget {
           style: TextStyle(
             color: Colors.white,
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _getInformationMessage(String message) {
+    return Center(
+      child: Text(
+        message,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontWeight: FontWeight.w900,
+          color: Colors.grey[500],
         ),
       ),
     );
