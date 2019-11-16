@@ -1,16 +1,16 @@
-# flutter_go_setstate
+# flutter GO setState!
 
 A new Flutter project.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+This Project is about async state of application and around this 4 async states bellow 👇🏾:
 
-A few resources to get you started if this is your first Flutter project:
+<p align="center">
+  <img src="https://i.imgur.com/bvkHg3Z.png" /><br/>
+</p>
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+With this 4 async states types, we show examples with FutureBuilder, StreamBuilder and StreamBuilder with BloC Pattern.
+More about, please access and watch the video ni this link bellow 👇🏾:
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- [4 async states](https://www.youtube.com/watch?v=TZkGT8WkjdA&list=PLdTodMosi-BwEwlzjN6EyS1vwGXFo-UlK&index=1)
