@@ -1,8 +1,4 @@
-# flutter GO setState!
-
-A new Flutter project.
-
-## Getting Started
+# Flutter GO setState!
 
 This Project is about async state of application and around this 4 async states bellow 👇🏾:
 
