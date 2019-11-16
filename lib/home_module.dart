@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'home_event.dart';
 import 'home_state.dart';
 
 class HomeModel {
@@ -7,10 +8,20 @@ class HomeModel {
 
   List<String> _listItems;
 
-  //Stream that broadcasts the home state
+  // -- Public interface for the home model --
+
   Stream<HomeState> get homeState => _stateController.stream;
 
-  Future getListData({
+  void dispatch(HomeEvent event) {
+    print('Event dispatched: $event');
+    if (event is FetchData) {
+      _getListData(hasData: event.hasData, hasError: event.hasError);
+    }
+  }
+
+  // -- --
+
+  Future _getListData({
     bool hasError = false,
     bool hasData = true,
   }) async {

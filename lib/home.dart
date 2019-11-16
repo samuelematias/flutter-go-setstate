@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_go_setstate/home_event.dart';
 import 'package:flutter_go_setstate/home_module.dart';
 import 'package:flutter_go_setstate/home_state.dart';
 
@@ -12,7 +13,7 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
-    model.getListData();
+    model.dispatch(FetchData());
     super.initState();
   }
 
@@ -21,7 +22,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          model.getListData();
+          model.dispatch(FetchData());
         },
       ),
       backgroundColor: Colors.grey[900],
