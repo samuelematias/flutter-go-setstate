@@ -1,29 +1,28 @@
 import 'dart:async';
-
-enum HomeViewState { Busy, DataRetrieved, NoData }
+import 'home_state.dart';
 
 class HomeModel {
-  final StreamController<HomeViewState> _stateController =
-      StreamController<HomeViewState>();
+  final StreamController<HomeState> _stateController =
+      StreamController<HomeState>();
 
-  List<String> listItems;
+  List<String> _listItems;
 
   //Stream that broadcasts the home state
-  Stream<HomeViewState> get homeState => _stateController.stream;
+  Stream<HomeState> get homeState => _stateController.stream;
 
   Future getListData({
     bool hasError = false,
     bool hasData = true,
   }) async {
-    _stateController.add(HomeViewState.Busy);
+    _stateController.add(BusyHomeState());
     await Future.delayed(Duration(seconds: 2));
     if (hasError) {
       return _stateController.addError(
           'An error occurred while fetching the data. Please try agagin later.');
     } else if (!hasData) {
-      return _stateController.add(HomeViewState.NoData);
+      return _stateController.add(DataFechtedHomeState(data: List<String>()));
     }
-    listItems = List<String>.generate(10, (index) => '$index title');
-    _stateController.add(HomeViewState.DataRetrieved);
+    _listItems = List<String>.generate(10, (index) => '$index title');
+    _stateController.add(DataFechtedHomeState(data: _listItems));
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_go_setstate/home_module.dart';
+import 'package:flutter_go_setstate/home_state.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -27,21 +28,25 @@ class _HomeState extends State<Home> {
       body: StreamBuilder(
         stream: model.homeState,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
+          var homeState = snapshot.data;
+
           if (snapshot.hasError) {
             return _getInformationMessage(snapshot.error);
-          } else if (!snapshot.hasData || snapshot.data == HomeViewState.Busy) {
+          } else if (!snapshot.hasData || homeState is BusyHomeState) {
             return Center(
               child: CircularProgressIndicator(),
             );
-          } else if (snapshot.data == HomeViewState.NoData) {
-            return _getInformationMessage(
-                'No data found for your account. Add something and check back.');
+          } else if (homeState is DataFechtedHomeState) {
+            if (!homeState.hasData) {
+              return _getInformationMessage(
+                  'No data found for your account. Add something and check back.');
+            }
           }
 
           return ListView.builder(
-            itemCount: model.listItems.length,
+            itemCount: homeState.data.length,
             itemBuilder: (BuildContext context, int index) =>
-                _getListItemUi(index, model.listItems),
+                _getListItemUi(index, homeState.data),
           );
         },
       ),
